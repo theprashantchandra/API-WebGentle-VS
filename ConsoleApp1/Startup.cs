@@ -9,6 +9,7 @@ namespace ConsoleApp1
         public void ConfigurServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddTransient<CustomMiddleware1>();
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -21,6 +22,8 @@ namespace ConsoleApp1
                 await context.Response.WaitAsync("Hello from use-1 2 \n");
             });
 
+            app.UseMiddleware<CustomMiddleware1>();
+
             app.Map("/nitesh", CutomCode);
 
             app.Use(async (context, next) =>
@@ -30,6 +33,12 @@ namespace ConsoleApp1
                 await next();
 
                 await context.Response.WaitAsync("Hello from use-2 2 \n");
+            });
+
+            app.Use(async (context, next) =>
+            {
+                await context.Response.WaitAsync("Request Completed \n");
+
             });
 
             app.Run(async context =>
