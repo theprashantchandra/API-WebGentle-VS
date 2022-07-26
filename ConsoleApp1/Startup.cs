@@ -21,6 +21,17 @@ namespace ConsoleApp1
                 await context.Response.WaitAsync("Hello from use-1 2 \n");
             });
 
+            app.Map("/nitesh", CutomCode);
+
+            app.Use(async (context, next) =>
+            {
+                await context.Response.WaitAsync("Hello from use-2 1 \n");
+
+                await next();
+
+                await context.Response.WaitAsync("Hello from use-2 2 \n");
+            });
+
             app.Run(async context =>
             {
                 await context.Response.WriteAsync("Hello from Run 1");
@@ -41,6 +52,14 @@ namespace ConsoleApp1
             {
                 endpoints.MapControllers();
 
+            });
+        }
+
+        private void CutomCode(IApplicationBuilder app)
+        {
+            app.Use(async (context, next) =>
+            {
+                await context.Response.WiteAsync("Hello from Nitish \n");
             });
         }
     }
