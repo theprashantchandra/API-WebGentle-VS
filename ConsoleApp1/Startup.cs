@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 
@@ -12,6 +12,25 @@ namespace ConsoleApp1
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.Use(async (context, next) =>
+            {
+                await context.Response.WaitAsync("Hello from use-1 1 \n");
+
+                await next();
+
+                await context.Response.WaitAsync("Hello from use-1 2 \n");
+            });
+
+            app.Run(async context =>
+            {
+                await context.Response.WriteAsync("Hello from Run 1");
+            });
+
+            app.Run(async context =>
+            {
+                await context.Response.WriteAsync("Hello from Run 2");
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
